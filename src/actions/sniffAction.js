@@ -21,15 +21,52 @@ export const sniff = (proximity) => {
       dispatch(getSniffStart());
       const result = [];
       let id = 139;
-      axios.get(`/api/stocks/${id}`)
+      axios.get(`/api/stocks`)
           .then(res => {
-            if (calculateProximity(res.data.records[0]) < proximity) {
-              result.push(id);
-            }
-            dispatch(getSniffResults(result));
+            let ctr = res.data.length;
+            res.data.forEach((stock) => {
+              getId(stock.securitySymbol)
+                .then(r => {
+                  let stockProximity = calculateProximity(r);
+                  console.log(`${stock.securitySymbol}: ${stockProximity}`)
+                  if (stockProximity < proximity) {
+                    result.push({symbol: stock.securitySymbol, proximity: stockProximity});
+                  }
+                  ctr--;
+                  if (ctr === 0) {
+                    dispatch(getSniffResults(result));
+                  }
+                })
+                .catch(e => {
+                  ctr--;
+                  if (ctr === 0) {
+                    dispatch(getSniffResults(result));
+                  }
+                });
+            });
           })
           .catch(err => dispatch(sniffError(err)))
   }
+}
+
+function getId(symbol) {
+  console.log(symbol);
+  return axios.get(`/api/stocks/${symbol}`)
+    .then(res => {
+      console.log(res.data.records[0].securityId);
+      let id = res.data.records[0].securityId;
+      return getStock(id);
+    })
+    .catch(err => false)
+}
+
+function getStock(id) {
+  return axios.get(`/api/stocks/${id}`)
+      .then(res => {
+        console.log(res.data.records[0]);
+        return res.data.records[0];
+      })
+      .catch(err => false)
 }
 
 function calculateProximity(stock) {

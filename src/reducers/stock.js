@@ -1,7 +1,7 @@
 import { SNIFF_RESULTS, SNIFF_ERROR } from '../actions/sniffAction';
 
 const initialState = {
-    results: ''
+    results: []
 }
 
 const stock = (state = initialState, action) => {

@@ -28,14 +28,14 @@ export default class Sniff extends Component {
         </div>
         <div>
           <button onClick={() => this.props.actions.sniff(this.state.proximity)}>Start Sniffing!!!</button>
-          <div style={{ padding: '30px' }}>{this.props.results}</div>
+          {
+            this.props.results.map(stock => {
+               return ( <div>{stock.symbol}: {stock.proximity}</div>)
+            })
+          }
         </div>
 
       </div>
     );
   }
-}
-
-function getProximityTo52WeekLow(stock) {
-
 }

@@ -1,30 +1,5 @@
 import axios from 'axios';
 
-export const GET_STOCK_START = "GET_STOCK_START";
-export const getStockStart = () => {
-    return { type: GET_STOCK_START }
-}
-
-export const GET_STOCK_RESULTS = "GET_STOCK_RESULTS";
-export const getStockResults = (data) => {
-    return { type: GET_STOCK_RESULTS, data }
-}
-
-export const GET_STOCK_ERROR = "GET_STOCK_ERROR";
-export const getStockError = (data) => {
-    return { type: GET_STOCK_ERROR, data }
-}
-
-export const GET_STOCK = "GET_STOCK";
-export const getStock = (id) => {
-  return dispatch => {
-      dispatch(getStockStart());
-      axios.get(`/api/stocks/${id}`)
-          .then(res => dispatch(getStockResults(JSON.stringify(res.data))))
-          .catch(err => dispatch(getStockError(err)))
-  }
-}
-
 export const EXPRESS_TEST_START = "EXPRESS_TEST_START";
 export const expressTestStart = () => {
     return { type: EXPRESS_TEST_START }

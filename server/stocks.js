@@ -18,14 +18,18 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:id', function(req, res, next) {
-  console.log('http://www.pse.com.ph/stockMarket/companyInfo.html?method=fetchHeaderData&ajax=true&company=599&security=' + req.params.id);
+  let url;
+  if (isNaN(req.params.id)) {
+    url = 'http://www.pse.com.ph/stockMarket/home.html?method=findSecurityOrCompany&ajax=true&start=0&limit=1&query=' + req.params.id;
+  } else {
+    url = 'http://www.pse.com.ph/stockMarket/companyInfo.html?method=fetchHeaderData&ajax=true&company=599&security=' + req.params.id;
+  }
   axios({
     method: 'get',
-    url: 'http://www.pse.com.ph/stockMarket/companyInfo.html?method=fetchHeaderData&ajax=true&company=599&security=' + req.params.id,
+    url,
     timeout: 10000,
     headers: {'Cookie':'JSESSIONID=' + cookie}
   }).then(success => {
-    console.log(success);
     res.status(200).send(success.data);
   }).catch(error => {
     res.send(error);
